@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 import withT from '../../../lib/withT'
 import { errorToString } from '../../../lib/utils/errors'
 import { timeFormat } from '../../../lib/utils/format'
+import { Link } from '../../../lib/routes'
 
 import { Item as AccountItem, P, A } from '../Elements'
 import FieldSet from '../../FieldSet'
@@ -36,10 +37,11 @@ class Manage extends Component {
       remoteError
     } = this.state
 
+    /*
     if (membership.type.name !== 'MONTHLY_ABO') {
       // currently only MONTHLY_ABO actions are active
       return null
-    }
+    } */
 
     if (updating) {
       return <InlineSpinner />
@@ -47,6 +49,19 @@ class Manage extends Component {
 
     return (
       <Fragment>
+        {membership.active && !isCancelling &&
+          <Fragment>
+            <Link route='prolong' params={{ membership: membership.id }}>
+              <A href=''>
+                {t.first([
+                  `memberships/${membership.type.name}/manage/prolong/link`,
+                  'memberships/manage/prolong/link'
+                ])}
+              </A>
+            </Link>
+            <br />
+          </Fragment>
+        }
         {membership.active && membership.renew && !isCancelling &&
           <A href='#cancel' onClick={(e) => {
             e.preventDefault()
